@@ -28,9 +28,9 @@
 %
 
 clear all;
-restoredefaultpath;
 close all;
-clc
+home;
+restoredefaultpath;
 fprintf('==== Script run: reconstruct multi-parametric water signals from "relaxation encoding segment" ==== \n');
 
 %% for debug
@@ -40,100 +40,93 @@ dbstop if error
 
 %% path set up
 disp('==== Setup library and path ====');tSet = tic;
+
 % set default lib
-script0_setDataPathLibrary;
+homePath    = '/home/';
+procDatPath = './';
+
 supportPath     = fullfile('./support/');
 addpath(fullfile(supportPath,'Water_T1T2/code/'));
-addpath(fullfile(supportPath,'Water_T1T2/module'));
 addpath(fullfile(supportPath,'pipeline_function/'));
 addpath(fullfile(supportPath,'Utilies/'));
-addpath(fullfile(supportPath,'Utilies/genImagePatch/'));
 addpath(genpath(fullfile(supportPath,'share_codes/')));
+
 % set data path
+dataSavPath     = fullfile(procDatPath,'data',filesep);
 prepEPSIfile    = fullfile(dataSavPath,'preparedData.mat');
 saveFigFile     = fullfile(procDatPath,'/Figs/multiparametric_water_recon/');
+
+% check data file
+if ~exist(prepEPSIfile,'file')
+    error('File %s not found. Please download the data as instructed in README.md and copy it into %s',prepEPSIfile,dataSavPath);
+end
+
 disp(['==== Setup library and path finished, elapsed time: ',num2str(toc(tSet)),' sec ====']);
 
 %% ============== step #1: data loading ============= %%
 
-%% ==== load data info, anatomical reference, and masks ==== %%
+%% load data info, anatomical reference, and masks
 disp('---Loading data info, anatomical reference, and masks---');
-myLoadVars(prepEPSIfile,'tvecEPSI','dt_D2','unippm','brainMask','lipMask','gapMask','anatRef','reg_mask_arrays','alTR_seconds',0);
+myLoadVars(prepEPSIfile,'tvecEPSI','dt_D2','unippm','brainMask','lipMask','gapMask','anatRef','reg_mask_arrays','alTR_seconds','adFlipAngle_degree',0);
 anatRef_high    = myLoadVars(prepEPSIfile,'anatRef',0);
 brainMask_high  = myLoadVars(prepEPSIfile,'brainMask',0);
 lipMask_high    = myLoadVars(prepEPSIfile,'lipMask',0);
 reg_mask_arrays = myLoadVars(prepEPSIfile,'reg_mask_arrays',0);
 
-%% ==== load data acquired with the Ernst angle ==== %% 
+%% load data acquired with the Ernst angle
 disp('---Loading reference data (acquired with Ernst angle)---');
 sxt_high_all        = myLoadVars(prepEPSIfile,'sxt_high_all',0);
 sense_map_high      = myLoadVars(prepEPSIfile,'sense_map_high',0);
 
-%% ==== load T1/T2 data ==== %% 
+%% load T1/T2 data
 disp('---Loading raw multiparametric data---');
 % raw data load
 ktEPSIt1t2x         = myLoadVars(prepEPSIfile,'ktEPSIt1t2x',0);
+FAvec               = myLoadVars(prepEPSIfile,'FAvec',0);
+T2pvec              = myLoadVars(prepEPSIfile,'T2pvec',0);
+
+% pre-trained reconstruction parameters
+myLoadVars(prepEPSIfile,'weight_fun','lambdaRecon','lambda_GS','lambda_ref','conv_sz','Rank_gps','noise_sigma',0);
 
 % set up variables 
-dt_all              = dt_D2/2;
 [Ny,Nx,Nz,Nt,~]     = size(sxt_high_all);
-tvec_all            = tvecEPSI(1:Nt);
-Nc                  = size(sense_map_high,5);
 
-% truncate time point
-if length(tvecEPSI) > Nt
-    for ifm = 1:size(ktEPSIt1t2x,2)
-        for ix = 1:Nx
-            ktEPSI   = reshape(single(full(ktEPSIt1t2x{ix,ifm})),Ny,1,Nz,[],Nc);
-            ktEPSIt1t2x{ix,ifm} = vec(ktEPSI(:,:,:,1:Nt,:));
-        end
-    end
-end
-
-%% ==== mask set up ==== %%  
+%% mask set up
 disp('---Set up masks---');
 brainMask           = imresize3d(brainMask,[Ny,Nx,Nz]);
 lipMask             = imresize3d(lipMask,[Ny,Nx,Nz]);
 gapMask             = imfill3D(lipMask,'holes') & ~brainMask & ~lipMask;
 anatRef             = imresize3d(anatRef,[Ny,Nx,Nz]);
 reg_mask_arrays     = imresize4d(reg_mask_arrays,[Ny,Nx,Nz]);
-csfMask             = reg_mask_arrays(:,:,:,4) > 0.1 & brainMask;
-wmMask              = reg_mask_arrays(:,:,:,3) > 0.5 & ~csfMask & brainMask;
-gmMask              = ~wmMask & ~csfMask & brainMask;
-gm_seg              = reg_mask_arrays(:,:,:,2);
-wm_seg              = reg_mask_arrays(:,:,:,3);
 csf_seg             = reg_mask_arrays(:,:,:,4);
 gap_seg             = reg_mask_arrays(:,:,:,5);
 lip_seg             = reg_mask_arrays(:,:,:,6);
 
-%% ==== other acquisition parameters ==== %%  
-FAvec               = [12,17,22,32];             %@@ flip angles
-T2pvec              = [0,0.02,0.04,0.06,0.08];   %@@ T2 preparation times 
-
 %% ============== step #2: multiparametric water reconstruction ============= %%
 
-%% prepare the input
-
 % parse supporting data
-support_data                = struct;
-support_data.dt_D2          = dt_D2;
-support_data.alTR_seconds   = alTR_seconds;
-support_data.tvecEPSI       = tvecEPSI;
-support_data.FAvec          = FAvec;
-support_data.T2pvec         = T2pvec;
-support_data.sense_map_high = sense_map_high;
-support_data.brainMask      = brainMask;
-support_data.lipMask        = lipMask;
-support_data.gapMask        = gapMask;
-support_data.wmMask         = wmMask;
-support_data.gmMask         = gmMask;
-support_data.csfMask        = csfMask;
-support_data.anatRef        = anatRef;
-support_data.gm_seg         = gm_seg;
-support_data.wm_seg         = wm_seg;
-support_data.csf_seg        = csf_seg;
-support_data.lip_seg        = lip_seg;
-support_data.gap_seg        = gap_seg;
+support_data                    = struct;
+support_data.dt_D2              = dt_D2;
+support_data.alTR_seconds       = alTR_seconds;
+support_data.adFlipAngle_degree = adFlipAngle_degree;
+support_data.tvecEPSI           = tvecEPSI;
+support_data.FAvec              = FAvec;
+support_data.T2pvec             = T2pvec;
+support_data.weight_fun         = weight_fun;
+support_data.lambdaRecon        = lambdaRecon;
+support_data.lambda_GS          = lambda_GS;
+support_data.lambda_ref         = lambda_ref;
+support_data.conv_sz            = conv_sz;
+support_data.Rank_gps           = Rank_gps;
+support_data.noise_sigma        = noise_sigma;
+support_data.sense_map_high     = sense_map_high;
+support_data.brainMask          = brainMask;
+support_data.lipMask            = lipMask;
+support_data.gapMask            = gapMask;
+support_data.anatRef            = anatRef;
+support_data.csf_seg            = csf_seg;
+support_data.lip_seg            = lip_seg;
+support_data.gap_seg            = gap_seg;
 
-%% reconstruction process
-[sxt_recon,T1map,PDmap,t2map] = function_multiparametric_reconstruction(ktEPSIt1t2x,sxt_high_all,support_data);
+% reconstruction process
+[sxt_recon,T1map,PDmap,T2map] = function_multiparametric_reconstruction(ktEPSIt1t2x,sxt_high_all,support_data);
