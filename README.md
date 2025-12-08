@@ -49,11 +49,11 @@ Deep learning dependencies: env_diffusion.yml
 
 (1) Download the code package in this repo
 
-(2) Install the deep learning dependencies: [To-Do: Add instruction here]
+(2) Install the deep learning dependencies: conda env create -f env_diffusion.yml
 
 (3) Download demo data and save it in the folder: './data/'
 
-(4) Download deep learning model checkpoints and save it in [To-Do: Add instruction here]
+(4) Download deep learning model checkpoints and save it in './support/Water_T1T2_SR/[T1map/T2map/PDmap]_SR/I2SB_model/experiment_base_100/ckpt/'
 
 (5) Run the demo script, type demo_multiparametric_water_recon in the MATLAB command line
 
