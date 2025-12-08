@@ -203,6 +203,31 @@ dataPath_LR = fullfile(procDatSRPath, 'PDmap_SR', 'Testing_data', subjectID, dat
 dataPath_SR = fullfile(procDatSRPath, 'PDmap_SR', 'Testing_data', subjectID, dataset_name, 'SR_data', 'mat');
 PDmap_NN = function_prepara_superRes_output(dataPath_LR, dataPath_SR, high_res_xy, [0, 0.003], 'PD');
 
+disp('==== Run T2map super-resolution with I2SB model (Python) ====');
+
+% Path to I2SB_model folder:
+I2SB_T2_root = fullfile(procDatSRPath, 'T2map_SR', 'I2SB_model');
+
+% Python script name inside I2SB_model
+I2SB_py_script = 'run_T2map_I2SB_SR_demo.py';
+which_python   = '/home/data/huixiang/anaconda3/envs/latent_diffusion/bin/python'; % load the python env
+
+% Build system command: cd into I2SB_model then run python with subject/dataset as args
+cmd = sprintf('cd %s; %s %s --subject-id %s --dataset-name %s', ...
+              I2SB_T2_root, which_python, I2SB_py_script, subjectID, dataset_name);
+status = system(cmd);
+
+if status ~= 0
+    error('I2SB T2map super-resolution failed (system status = %d).', status);
+else
+    disp('==== I2SB T2map super-resolution finished successfully. ====');
+end
+
+% collect network output to 3D normalized map
+dataPath_LR = fullfile(procDatSRPath, 'T2map_SR', 'Testing_data', subjectID, dataset_name, 'LR_data', 'mat');
+dataPath_SR = fullfile(procDatSRPath, 'T2map_SR', 'Testing_data', subjectID, dataset_name, 'SR_data', 'mat');
+T2map_NN = function_prepara_superRes_output(dataPath_LR, dataPath_SR, high_res_xy, [0, 0.3], 'T2');
+
 
 %% ============== step #4: GS-based spatial adaptation ============= %%
 disp('==== GS-based spatial adaptation ====');tRecon = tic;
