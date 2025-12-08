@@ -6,6 +6,7 @@ This is a package of reconstruction code for multiparametric mapping using non-w
 (3) Demo script: demo_multiparametric_water_recon.m
 
 Demo data can be downloaded from https://uofi.box.com/s/6g0bqoz6u2yydkny4evpvc92h30j503p
+
 Deep learning model weight checkpoints can be downloaded from https://uofi.box.com/s/1lfh2ms7fuau95e3nypsosgvy5uzd46g
 
 System requirements:
