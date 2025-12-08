@@ -159,7 +159,7 @@ disp(['==== GS-based spatial adaptation finished, elapsed time: ',num2str(toc(tR
 %% ============== step #5: display results ============= %%
 figure;montagesc(flip(PDmap_final(:,:,21:6:end-20)));caxis([0,1e-3]);colormap('gray');axis off;
 figure;montagesc(flip(T2map_final(:,:,21:6:end-20)));caxis([0,0.3]);colormap('hot');axis off;
-figure;montagesc(flip(T1map_final(:,:,21:6:end-20)));caxis([0.,3.5]);colormap('jet');axis off;
+figure;montagesc(flip(T1map_final(:,:,21:6:end-20)));caxis([0.3,3.5]);colormap('jet');axis off;
 
 
 
