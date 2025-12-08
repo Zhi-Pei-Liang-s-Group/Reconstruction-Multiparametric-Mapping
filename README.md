@@ -6,7 +6,7 @@ This is a package of reconstruction code for multiparametric mapping using non-w
 
     -- "function_multiparametric_reconstruction.m": Multiparametric image reconstruction from sparse (k,t)-data
 
-    -- "function_prepare_superRes_input/output.m": Learning-based super-resolution reconstruction from sparse reconstruction
+    -- "function_prepare_superRes_input/output.m"+"run_[T1map/PDmap/T2map]_I2SB_SR_demo.py": Learning-based super-resolution reconstruction
     
     -- "function_GS_reconstruction.m": Generalized series-based spatial adaptation of the deep learning priors
     
@@ -40,7 +40,7 @@ MATLAB R2014a (fully tested)
 
 Python 3.10.4
 
-Deep learning dependencies: [To-Do: Add required environment file]
+Deep learning dependencies: env_diffusion.yml
 
 <br>
 
