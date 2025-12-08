@@ -143,8 +143,40 @@ image_low(isnan(image_low)) = 0;
 %% ============== step #3: deep learning-based super-resolution ============= %%
 
 %% data preprocessing
+subjectID    = 'MRx_uploaded_demo_data';
+dataset_name = 'SPICE_352x352_from_214x122';
+procDatSRPath  = fullfile(procDatPath, 'support', 'Water_T1T2_SR');
+
+function_prepara_superRes_input(T1map, PDmap, T2map, ...
+                                 subjectID, dataset_name, ...
+                                 procDatSRPath, ...
+                                 high_res_xy);
 
 %% network prediction - output: T1map_NN, PDmap_NN, T2map_NN
+disp('==== Run T1map super-resolution with I2SB model (Python) ====');
+
+% Path to I2SB_model folder:
+I2SB_T1_root = fullfile(procDatSRPath, 'T1map_SR', 'I2SB_model');
+
+% Python script name inside I2SB_model
+I2SB_py_script = 'run_T1map_I2SB_SR_demo.py';
+which_python   = '/home/data/huixiang/anaconda3/envs/latent_diffusion/bin/python'; % load the python env
+
+% Build system command: cd into I2SB_model then run python with subject/dataset as args
+cmd = sprintf('cd %s; %s %s --subject-id %s --dataset-name %s', ...
+              I2SB_T1_root, which_python, I2SB_py_script, subjectID, dataset_name);
+status = system(cmd);
+
+if status ~= 0
+    error('I2SB T1map super-resolution failed (system status = %d).', status);
+else
+    disp('==== I2SB T1map super-resolution finished successfully. ====');
+end
+
+% collect network output to 3D normalized map
+dataPath_LR = fullfile(procDatSRPath, 'T1map_SR', 'Testing_data', subjectID, dataset_name, 'LR_data', 'mat');
+dataPath_SR = fullfile(procDatSRPath, 'T1map_SR', 'Testing_data', subjectID, dataset_name, 'SR_data', 'mat');
+T1map_SR = function_prepara_superRes_output(dataPath_LR, dataPath_SR, high_res_xy, [0,3], 'T1');
 
 
 %% ============== step #4: GS-based spatial adaptation ============= %%
