@@ -1,9 +1,14 @@
 This is a package of reconstruction code for multiparametric mapping using non-water-suppressed MRSI, including:
 (1) Main reconstruction functions: 
+
     -- "function_multiparametric_reconstruction.m": Multiparametric image reconstruction from sparse (k,t)-data
+    
     -- "function_GS_reconstruction.m": Generalized series-based spatial adaptation of the deep learning priors
+    
 (2) Support functions in folder "support"
+
 (3) Demo script: demo_multiparametric_water_recon.m
+
 
 Demo data can be downloaded from https://uofi.box.com/s/6g0bqoz6u2yydkny4evpvc92h30j503p
 
