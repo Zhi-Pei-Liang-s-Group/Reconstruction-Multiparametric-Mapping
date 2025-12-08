@@ -28,19 +28,19 @@ Deep learning model checkpoints can be downloaded from https://uofi.box.com/s/1l
 
 **System Requirements**
 
-The reconstruction code requires a standard computer with enough RAM to process the multiparametric data.
+Hardware Requirement: A standard workstation with sufficient CPU/GPU RAM
 
-The deep learning code requires [To-Do: Add system requirements for deep learning code]
-
-This package is supported for the Linux operating system. The package has been tested on Linux Ubuntu 16.04 and Linux Ubuntu 18.04.
+Supported Operating Systems: Linux (tested on Ubuntu 16.04 and Ubuntu 18.04)
 
 <br>
 
 **Software Requirements**
 
-The package has been tested on MATLAB R2014a and [To-Do: Add Python version here].
+MATLAB R2014a (fully tested)
 
-The list of dependent software required for deep learning model can be found in [To-Do: Add required envirenment file] and can be install by [To-Do: Add instruction on installing environment]
+Python [To-Do: Add version here]
+
+Deep learning dependencies: [To-Do: Add required environment file]
 
 <br>
 
@@ -49,10 +49,12 @@ The list of dependent software required for deep learning model can be found in 
 
 (1) Download the code package in this repo
 
-(2) Download demo data and save it in the folder: './data/'
+(2) Install the deep learning dependencies: [To-Do: Add instruction here]
 
-(3) Download deep learning model checkpoints and save it in [To-Do: Add instruction here]
+(3) Download demo data and save it in the folder: './data/'
 
-(4) Run the demo script, type demo_multiparametric_water_recon in the MATLAB command line
+(4) Download deep learning model checkpoints and save it in [To-Do: Add instruction here]
+
+(5) Run the demo script, type demo_multiparametric_water_recon in the MATLAB command line
 
 
