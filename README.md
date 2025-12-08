@@ -6,7 +6,7 @@ This is a package of reconstruction code for multiparametric mapping using non-w
 
     -- "function_multiparametric_reconstruction.m": Multiparametric image reconstruction from sparse (k,t)-data
 
-    -- [To-Do: Add deep learning function here]
+    -- "function_prepare_superRes_input/output.m": Learning-based super-resolution reconstruction from sparse reconstruction
     
     -- "function_GS_reconstruction.m": Generalized series-based spatial adaptation of the deep learning priors
     
@@ -38,7 +38,7 @@ Supported Operating Systems: Linux (tested on Ubuntu 16.04 and Ubuntu 18.04)
 
 MATLAB R2014a (fully tested)
 
-Python [To-Do: Add version here]
+Python 3.10.4
 
 Deep learning dependencies: [To-Do: Add required environment file]
 
