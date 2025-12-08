@@ -1,4 +1,9 @@
-% This is the packaged code for multi-parametric water reconstruction for simultaneous MRI and MRSI
+% This is the packaged code for multi-parametric reconstruction for multiplexed MRI
+%
+% The code contains the following components:
+%   --- multiparametric image reconstruction from highly sparse (k,t)-data
+%   --- deep learning (DL)-based image super-resolution
+%   --- DL-assisted generalized series model-based reconstruction
 % 
 % [Inputs]
 %   --- supporting data
@@ -20,7 +25,9 @@
 %       --- TPvec:               vector of acquired T2 preparation times
 %
 % [Outputs]
-%   sxt_recon_final:    final reconstruction
+%   T1map_final: high-resolution T1 map
+%   PDmap_final: high-resolution PD map
+%   T2map_final: high-resolution T2 map
 %
 % 
 %   Liang's Lab @ UIUC
@@ -102,7 +109,7 @@ csf_seg             = reg_mask_arrays(:,:,:,4);
 gap_seg             = reg_mask_arrays(:,:,:,5);
 lip_seg             = reg_mask_arrays(:,:,:,6);
 
-%% ============== step #2: multiparametric water reconstruction ============= %%
+%% ============== step #2: multiparametric reconstruction from sparse data ============= %%
 
 % parse supporting data
 support_data                    = struct;
@@ -129,4 +136,30 @@ support_data.lip_seg            = lip_seg;
 support_data.gap_seg            = gap_seg;
 
 % reconstruction process
-[sxt_recon,T1map,PDmap,T2map] = function_multiparametric_reconstruction(ktEPSIt1t2x,sxt_high_all,support_data);
+[sxt_recon,T1map_low,PDmap_low,T2map_low] = function_multiparametric_reconstruction(ktEPSIt1t2x,sxt_high_all,support_data);
+image_low = sxt_recon(:,:,:,1,:);
+image_low(isnan(image_low)) = 0;
+
+%% ============== step #3: deep learning-based super-resolution ============= %%
+
+%% data preprocessing
+
+%% network prediction - output: T1map_NN, PDmap_NN, T2map_NN
+
+
+%% ============== step #4: GS-based spatial adaptation ============= %%
+disp('==== GS-based spatial adaptation ====');tRecon = tic;
+
+% GS-based reconstruction
+[T1map_final,PDmap_final,T2map_final] = function_GS_reconstruction(image_low,T1map_low,PDmap_low,T2map_low,T1map_NN,PDmap_NN,T2map_NN,support_data);
+
+disp(['==== GS-based spatial adaptation finished, elapsed time: ',num2str(toc(tRecon)),' sec ====']);
+
+
+%% ============== step #5: display results ============= %%
+figure;montagesc(T1map_final(:,:,21:6:end-20));caxis([0.,3.5]);colormap('jet');axis off;
+figure;montagesc(PDmap_final(:,:,21:6:end-20));caxis([0,1e-3]);colormap('gray');axis off;
+figure;montagesc(T2map_final(:,:,21:6:end-20));caxis([0,0.3]);colormap('hot');axis off;
+
+
+
