@@ -40,7 +40,7 @@ MATLAB R2014a (fully tested)
 
 Python 3.10.4
 
-Deep learning dependencies: env_diffusion.yml
+Deep learning dependencies: env_diffusion.yml+requirements.txt
 
 <br>
 
