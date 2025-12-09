@@ -71,4 +71,7 @@ Deep learning dependencies: env_diffusion.yml+requirements.txt
 
 (5) Run the demo script, type demo_multiparametric_water_recon in the MATLAB command line
 
+**Acknowledgement**
+The deep learning code is based on [I2SB](https://i2sb.github.io/)
+
 
