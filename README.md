@@ -40,7 +40,7 @@ MATLAB R2014a (fully tested)
 
 Python 3.10.4
 
-Deep learning dependencies: env_diffusion.yml+requirements.txt
+Deep learning dependencies: requirements.txt
 
 <br>
 
@@ -52,12 +52,12 @@ Deep learning dependencies: env_diffusion.yml+requirements.txt
 (2) Install the deep learning dependencies: 
    1. Create the conda environment:
       ```bash
-      conda env create -f env_diffusion.yml -n latent_diffusion
+      conda create -n latent_diffusion_test python=3.10.4 pip=23.2.1
       ```
 
    2. Activate the environment:
       ```bash
-      conda activate latent_diffusion
+      conda activate latent_diffusion_test 
       ```
 
    3. Install Python packages with pip:
