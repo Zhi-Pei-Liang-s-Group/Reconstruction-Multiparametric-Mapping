@@ -49,7 +49,10 @@ Deep learning dependencies: env_diffusion.yml
 
 (1) Download the code package in this repo
 
-(2) Install the deep learning dependencies: conda env create -f env_diffusion.yml
+(2) Install the deep learning dependencies: 
+    conda env create -f env_diffusion.yml -n latent_diffusion
+    conda activate latent_diffusion
+    pip install -r requirements.txt
 
 (3) Download demo data and save it in the folder: './data/'
 
