@@ -66,12 +66,12 @@ Deep learning dependencies: env_diffusion.yml+requirements.txt
       ```
 
 (3) Download demo data and save it in the folder: 
-    ```
+    ```bash
     ./data/
     ```
 
 (4) Download deep learning model checkpoints and save it in 
-    ```
+    ```bash
     ./support/Water_T1T2_SR/[T1map/T2map/PDmap]_SR/I2SB_model/experiment_base_100/ckpt/
     ```
 
