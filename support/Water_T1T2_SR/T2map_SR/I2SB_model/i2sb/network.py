@@ -22,7 +22,7 @@ from .ckpt_util import (
 from ipdb import set_trace as debug
 
 class Image256Net(torch.nn.Module):
-    def __init__(self, log, noise_levels, use_fp16=False, cond=False, pretrained_adm=True, ckpt_dir="data/"):
+    def __init__(self, log, noise_levels, use_fp16=False, cond=False, pretrained_adm=False, ckpt_dir="data/"):
         super(Image256Net, self).__init__()
 
         # initialize model
