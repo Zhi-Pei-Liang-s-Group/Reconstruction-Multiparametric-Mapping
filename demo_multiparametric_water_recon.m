@@ -146,6 +146,7 @@ image_low(isnan(image_low)) = 0;
 subjectID    = 'MRx_uploaded_demo_data';
 dataset_name = 'SPICE_352x352_from_214x122';
 procDatSRPath  = fullfile(procDatPath, 'support', 'Water_T1T2_SR');
+high_res_xy  = [352,352];
 
 function_prepara_superRes_input(T1map_low, PDmap_low, T2map_low, ...
                                  subjectID, dataset_name, ...
@@ -160,7 +161,7 @@ I2SB_T1_root = fullfile(procDatSRPath, 'T1map_SR', 'I2SB_model');
 
 % Python script name inside I2SB_model
 I2SB_py_script = 'run_T1map_I2SB_SR_demo.py';
-which_python   = '/home/data/huixiang/anaconda3/envs/latent_diffusion/bin/python'; % load the python env
+which_python   = './anaconda3/envs/latent_diffusion/bin/python'; % @@ change to local python env
 
 % Build system command: cd into I2SB_model then run python with subject/dataset as args
 cmd = sprintf('cd %s; %s %s --subject-id %s --dataset-name %s', ...
@@ -185,7 +186,7 @@ I2SB_PD_root = fullfile(procDatSRPath, 'PDmap_SR', 'I2SB_model');
 
 % Python script name inside I2SB_model
 I2SB_py_script = 'run_PDmap_I2SB_SR_demo.py';
-which_python   = '/home/data/huixiang/anaconda3/envs/latent_diffusion/bin/python'; % load the python env
+which_python   = './anaconda3/envs/latent_diffusion/bin/python'; % @@ change to local python env
 
 % Build system command: cd into I2SB_model then run python with subject/dataset as args
 cmd = sprintf('cd %s; %s %s --subject-id %s --dataset-name %s', ...
@@ -210,7 +211,7 @@ I2SB_T2_root = fullfile(procDatSRPath, 'T2map_SR', 'I2SB_model');
 
 % Python script name inside I2SB_model
 I2SB_py_script = 'run_T2map_I2SB_SR_demo.py';
-which_python   = '/home/data/huixiang/anaconda3/envs/latent_diffusion/bin/python'; % load the python env
+which_python   = './anaconda3/envs/latent_diffusion/bin/python'; % @@ change to local python env
 
 % Build system command: cd into I2SB_model then run python with subject/dataset as args
 cmd = sprintf('cd %s; %s %s --subject-id %s --dataset-name %s', ...
