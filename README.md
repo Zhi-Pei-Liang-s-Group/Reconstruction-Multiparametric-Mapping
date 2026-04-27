@@ -75,6 +75,7 @@ Deep learning dependencies: requirements.txt
     ./support/Water_T1T2_SR/[T1map/T2map/PDmap]_SR/I2SB_model/experiment_base_100/ckpt/
     ```
 
+(6) In the demo script, Line 164, Line 189, and Line 214, change the path to your local python environment (the one you install the deep learning dependencies)
 
 (5) Run the demo script, type demo_multiparametric_water_recon in the MATLAB command line
 
